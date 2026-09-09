@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLÅTUR 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7D9E6;
+    --paper-line: #E6B9CE;
+    --ink: #3B1F2B;
+    --ink-soft: #7A5A66;
+    --pine: #2F6E5B;
+    --rust: #B5502E;
+    --gold: #C7963A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+
+  .frame {
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  header {
+    text-align: left;
+  }
+
+  .trip-name {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0 0 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .trip-dates {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  main {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+  }
+
+  .tab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: transparent;
+    border: 1px solid var(--paper-line);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    padding: 10px 18px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .tab.active {
+    background: #fff;
+    color: var(--pine);
+    font-weight: 500;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--paper-line);
+    border-radius: 0 10px 10px 10px;
+    padding: 28px 28px 8px;
+    position: relative;
+  }
+
+  .day-heading {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--rust);
+    margin: 0 0 4px;
+  }
+
+  .day-date {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin: 0 0 24px;
+    color: var(--ink);
+  }
+
+  .stop {
+    display: grid;
+    grid-template-columns: 68px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--paper-line);
+  }
+
+  .stop:last-child { border-bottom: none; }
+
+  .stop-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: var(--pine);
+    padding-top: 2px;
+  }
+
+  .stop-body .activity {
+    font-weight: 500;
+    margin: 0 0 2px;
+  }
+
+  .stop-body .place {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  footer {
+    margin-top: 28px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  footer code {
+    background: var(--paper-line);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* Bilde-collage: mobil-først som en enkel rutenett-rad, blir en ramme rundt programmet på brede skjermer */
+  .photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .photo {
+    aspect-ratio: 4 / 5;
+    background: #fff;
+    border: 1px solid var(--paper-line);
+    box-shadow: 0 4px 10px rgba(59, 31, 43, 0.1);
+    padding: 8px 8px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  .photo::before {
+    content: attr(data-label);
+  }
+
+  .photo:nth-child(odd) { transform: rotate(-2deg); }
+  .photo:nth-child(even) { transform: rotate(2deg); }
+
+  @media (min-width: 980px) {
+    .frame {
+      grid-template-columns: 160px 1fr 160px;
+      grid-template-areas:
+        "p1   header header"
+        "p2   main   p6"
+        "p3   main   p7"
+        "p4   main   p8"
+        "p5   main   p9";
+      align-items: start;
+      gap: 24px;
+    }
+    header { grid-area: header; }
+    main { grid-area: main; margin: 0; }
+    .photos { display: contents; }
+    .photo {
+      aspect-ratio: auto;
+      height: 140px;
+    }
+    .photo:nth-of-type(1) { grid-area: p1; }
+    .photo:nth-of-type(2) { grid-area: p2; }
+    .photo:nth-of-type(3) { grid-area: p3; }
+    .photo:nth-of-type(4) { grid-area: p4; }
+    .photo:nth-of-type(5) { grid-area: p5; }
+    .photo:nth-of-type(6) { grid-area: p6; }
+    .photo:nth-of-type(7) { grid-area: p7; }
+    .photo:nth-of-type(8) { grid-area: p8; }
+    .photo:nth-of-type(9) { grid-area: p9; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card { animation: fadeIn 0.25s ease; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <div class="photo" data-label="[Bilde 1]"></div>
+  <div class="photo" data-label="[Bilde 2]"></div>
+  <div class="photo" data-label="[Bilde 3]"></div>
+  <div class="photo" data-label="[Bilde 4]"></div>
+  <div class="photo" data-label="[Bilde 5]"></div>
+
+  <header>
+    <h1 class="trip-name">BLÅTUR 2026</h1>
+    <div class="trip-dates">18.–20. september · fredag–søndag</div>
+  </header>
+
+  <main>
+    <nav class="tabs" id="tabs"></nav>
+    <section class="card" id="card"></section>
+    <footer>
+      Rediger stopp og bilde-tekster i <code>tripData</code> nederst i HTML-filen.
+    </footer>
+  </main>
+
+  <div class="photo" data-label="[Bilde 6]"></div>
+  <div class="photo" data-label="[Bilde 7]"></div>
+  <div class="photo" data-label="[Bilde 8]"></div>
+  <div class="photo" data-label="[Bilde 9]"></div>
+
+</div>
+
+<script>
+  // REDIGER HER: legg til/fjern dager og stopp i denne listen
+  const tripData = [
+    {
+      label: "Fredag",
+      date: "Fredag 18. september",
+      stops: [
+        { time: "08:00", activity: "Avreise", place: "[Sted / adresse]" },
+        { time: "12:30", activity: "[Aktivitet]", place: "[Sted]" },
+        { time: "19:00", activity: "Middag", place: "[Sted]" },
+      ],
+    },
+    {
+      label: "Lørdag",
+      date: "Lørdag 19. september",
+      stops: [
+        { time: "09:00", activity: "[Aktivitet]", place: "[Sted]" },
+        { time: "14:00", activity: "[Aktivitet]", place: "[Sted]" },
+        { time: "20:00", activity: "[Aktivitet]", place: "[Sted]" },
+      ],
+    },
+    {
+      label: "Søndag",
+      date: "Søndag 20. september",
+      stops: [
+        { time: "10:00", activity: "[Aktivitet]", place: "[Sted]" },
+        { time: "15:00", activity: "Hjemreise", place: "[Sted / adresse]" },
+      ],
+    },
+  ];
+
+  const tabsEl = document.getElementById("tabs");
+  const cardEl = document.getElementById("card");
+  let activeIndex = 0;
+
+  function renderTabs() {
+    tabsEl.innerHTML = "";
+    tripData.forEach((day, i) => {
+      const btn = document.createElement("button");
+      btn.className = "tab" + (i === activeIndex ? " active" : "");
+      btn.textContent = day.label;
+      btn.onclick = () => { activeIndex = i; renderTabs(); renderCard(); };
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function renderCard() {
+    const day = tripData[activeIndex];
+    cardEl.innerHTML = "";
+    cardEl.classList.remove("card");
+    void cardEl.offsetWidth;
+    cardEl.classList.add("card");
+
+    const heading = document.createElement("p");
+    heading.className = "day-heading";
+    heading.textContent = day.label.toUpperCase();
+    cardEl.appendChild(heading);
+
+    const date = document.createElement("p");
+    date.className = "day-date";
+    date.textContent = day.date;
+    cardEl.appendChild(date);
+
+    day.stops.forEach(stop => {
+      const row = document.createElement("div");
+      row.className = "stop";
+
+      const time = document.createElement("div");
+      time.className = "stop-time";
+      time.textContent = stop.time;
+
+      const body = document.createElement("div");
+      body.className = "stop-body";
+      const activity = document.createElement("p");
+      activity.className = "activity";
+      activity.textContent = stop.activity;
+      const place = document.createElement("p");
+      place.className = "place";
+      place.textContent = stop.place;
+      body.appendChild(activity);
+      body.appendChild(place);
+
+      row.appendChild(time);
+      row.appendChild(body);
+      cardEl.appendChild(row);
+    });
+  }
+
+  renderTabs();
+  renderCard();
+</script>
+</body>
+</html>
