@@ -40,6 +40,7 @@
 
   header {
     text-align: left;
+    order: 1;
   }
 
   .trip-name {
@@ -70,6 +71,7 @@
     width: 100%;
     max-width: 640px;
     margin: 0 auto;
+    order: 2;
   }
 
   .tabs {
@@ -174,11 +176,12 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
+    order: 3;
   }
 
   .photo {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1 / 1;
     background: #fff;
     border: 1px solid var(--paper-line);
     box-shadow: 0 4px 10px rgba(59, 31, 43, 0.1);
@@ -190,9 +193,17 @@
     font-size: 12px;
     color: var(--ink-soft);
     text-align: center;
+    overflow: hidden;
   }
 
-  .photo::before {
+  .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo:empty::before {
     content: attr(data-label);
   }
 
@@ -251,28 +262,34 @@
     main { grid-area: main; margin: 0; }
     .photos { display: contents; }
     .photo-item {
-      width: 180px;
-    }
-    .photo-item:nth-child(odd) {
+      width: 160px;
       justify-self: start;
     }
-    .photo-item:nth-child(even) {
-      justify-self: end;
-    }
     .photo {
-      aspect-ratio: auto;
-      height: 108px;
+      aspect-ratio: 1 / 1;
+      height: auto;
     }
-    .photo-item:nth-of-type(1) { grid-area: p1; }
-    .photo-item:nth-of-type(2) { grid-area: p2; }
-    .photo-item:nth-of-type(3) { grid-area: p3; }
-    .photo-item:nth-of-type(4) { grid-area: p4; }
-    .photo-item:nth-of-type(5) { grid-area: p5; }
-    .photo-item:nth-of-type(6) { grid-area: p6; }
-    .photo-item:nth-of-type(7) { grid-area: p7; }
-    .photo-item:nth-of-type(8) { grid-area: p8; }
-    .photo-item:nth-of-type(9) { grid-area: p9; }
-    .photo-item:nth-of-type(10) { grid-area: p10; }
+    .photo-item:nth-of-type(1) { grid-area: p1; margin-left: 4px; }
+    .photo-item:nth-of-type(2) { grid-area: p2; margin-left: 58px; }
+    .photo-item:nth-of-type(3) { grid-area: p3; margin-left: 18px; }
+    .photo-item:nth-of-type(4) { grid-area: p4; margin-left: 50px; }
+    .photo-item:nth-of-type(5) { grid-area: p5; margin-left: 10px; }
+    .photo-item:nth-of-type(6) { grid-area: p6; margin-left: 34px; }
+    .photo-item:nth-of-type(7) { grid-area: p7; margin-left: 4px; }
+    .photo-item:nth-of-type(8) { grid-area: p8; margin-left: 56px; }
+    .photo-item:nth-of-type(9) { grid-area: p9; margin-left: 14px; }
+    .photo-item:nth-of-type(10) { grid-area: p10; margin-left: 44px; }
+
+    .photo-item:nth-of-type(1) .photo { transform: rotate(-3deg); }
+    .photo-item:nth-of-type(2) .photo { transform: rotate(2deg); }
+    .photo-item:nth-of-type(3) .photo { transform: rotate(-2deg); }
+    .photo-item:nth-of-type(4) .photo { transform: rotate(3deg); }
+    .photo-item:nth-of-type(5) .photo { transform: rotate(-1deg); }
+    .photo-item:nth-of-type(6) .photo { transform: rotate(2deg); }
+    .photo-item:nth-of-type(7) .photo { transform: rotate(-3deg); }
+    .photo-item:nth-of-type(8) .photo { transform: rotate(1deg); }
+    .photo-item:nth-of-type(9) .photo { transform: rotate(-2deg); }
+    .photo-item:nth-of-type(10) .photo { transform: rotate(3deg); }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -363,19 +380,19 @@
 <div class="frame">
 
   <div class="photo-item" data-caption="Pakk lett, kun håndbagasje tillatt">
-    <div class="photo" data-label="[Bilde 1]"></div>
+    <div class="photo" data-label="[Bilde 1]"><img src="bilde1.jpg" alt="Bilde 1"></div>
   </div>
   <div class="photo-item" data-caption="Pakk en fin outfit til fredag!">
-    <div class="photo" data-label="[Bilde 2]"></div>
+    <div class="photo" data-label="[Bilde 2]"><img src="bilde2.jpg" alt="Bilde 2"></div>
   </div>
   <div class="photo-item" data-caption="Pakk en fin outfit til lørdag og ;)">
-    <div class="photo" data-label="[Bilde 3]"></div>
+    <div class="photo" data-label="[Bilde 3]"><img src="bilde3.jpg" alt="Bilde 3"></div>
   </div>
   <div class="photo-item" data-caption="Ta med deg hæler hvis du vil, men husk å lakke tærne.....">
-    <div class="photo" data-label="[Bilde 4]"></div>
+    <div class="photo" data-label="[Bilde 4]"><img src="bilde4.jpg" alt="Bilde 4"></div>
   </div>
   <div class="photo-item" data-caption="[Bildetekst]">
-    <div class="photo" data-label="[Bilde 5]"></div>
+    <div class="photo" data-label="[Bilde 5]"><img src="bilde5.jpg" alt="Bilde 5"></div>
   </div>
 
   <header>
@@ -490,6 +507,7 @@
         <line x1="15" y1="64" x2="35" y2="62"/>
         <line x1="85" y1="58" x2="65" y2="55"/>
         <line x1="85" y1="64" x2="65" y2="62"/>
+        <path d="M38,20 L38,8 L44,14 L50,4 L56,14 L62,8 L62,20 Z" fill="#C7963A" stroke-width="2"/>
       </svg>
       <span class="cat-name">KRISTIN</span>
     </div>
@@ -507,6 +525,7 @@
         <line x1="15" y1="64" x2="35" y2="62"/>
         <line x1="85" y1="58" x2="65" y2="55"/>
         <line x1="85" y1="64" x2="65" y2="62"/>
+        <path d="M38,20 L38,8 L44,14 L50,4 L56,14 L62,8 L62,20 Z" fill="#C7963A" stroke-width="2"/>
       </svg>
       <span class="cat-name">ANITA</span>
     </div>
@@ -514,19 +533,19 @@
   </main>
 
   <div class="photo-item" data-caption="Vi skal spise masse god mat">
-    <div class="photo" data-label="[Bilde 6]"></div>
+    <div class="photo" data-label="[Bilde 6]"><img src="bilde6.jpg" alt="Bilde 6"></div>
   </div>
   <div class="photo-item" data-caption="Og drikke masse god øl">
-    <div class="photo" data-label="[Bilde 7]"></div>
+    <div class="photo" data-label="[Bilde 7]"><img src="bilde7.jpg" alt="Bilde 7"></div>
   </div>
   <div class="photo-item" data-caption="City stroll & shopping">
-    <div class="photo" data-label="[Bilde 8]"></div>
+    <div class="photo" data-label="[Bilde 8]"><img src="bilde8.jpg" alt="Bilde 8"></div>
   </div>
   <div class="photo-item" data-caption="Håper ingen havner i fengsel ?!?!">
-    <div class="photo" data-label="[Bilde 9]"></div>
+    <div class="photo" data-label="[Bilde 9]"><img src="bilde9.jpg" alt="Bilde 9"></div>
   </div>
   <div class="photo-item" data-caption="[Bildetekst]">
-    <div class="photo" data-label="[Bilde 10]"></div>
+    <div class="photo" data-label="[Bilde 10]"><img src="bilde10.jpg" alt="Bilde 10"></div>
   </div>
 
 </div>
@@ -639,7 +658,7 @@
     document.body.appendChild(backdrop);
   }
 
-  function showPhotoModal(label, caption) {
+  function showPhotoModal(imgSrc, imgAlt, caption) {
     const backdrop = document.createElement("div");
     backdrop.className = "modal-backdrop";
 
@@ -648,7 +667,10 @@
 
     const photo = document.createElement("div");
     photo.className = "photo";
-    photo.setAttribute("data-label", label);
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    img.alt = imgAlt;
+    photo.appendChild(img);
 
     const captionEl = document.createElement("p");
     captionEl.className = "photo-caption";
@@ -669,9 +691,9 @@
   }
 
   document.querySelectorAll(".photo-item").forEach(item => {
-    const label = item.querySelector(".photo").getAttribute("data-label");
+    const img = item.querySelector(".photo img");
     const caption = item.getAttribute("data-caption");
-    item.addEventListener("click", () => showPhotoModal(label, caption));
+    item.addEventListener("click", () => showPhotoModal(img.src, img.alt, caption));
   });
 
   renderTabs();
