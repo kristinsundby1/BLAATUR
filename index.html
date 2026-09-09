@@ -26,12 +26,12 @@
     font-family: 'Inter', sans-serif;
     display: flex;
     justify-content: center;
-    padding: 48px 20px 80px;
+    padding: 32px 20px 40px;
   }
 
   .frame {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1320px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
@@ -56,6 +56,14 @@
     font-size: 14px;
     color: var(--ink-soft);
     letter-spacing: 0.02em;
+  }
+
+  .trip-hint {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--rust);
+    margin-top: 14px;
   }
 
   main {
@@ -161,7 +169,15 @@
     gap: 14px;
   }
 
+  .photo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
   .photo {
+    width: 100%;
     aspect-ratio: 4 / 5;
     background: #fff;
     border: 1px solid var(--paper-line);
@@ -180,37 +196,83 @@
     content: attr(data-label);
   }
 
-  .photo:nth-child(odd) { transform: rotate(-2deg); }
-  .photo:nth-child(even) { transform: rotate(2deg); }
+  .photo-caption {
+    margin: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  .photo-modal-box {
+    background: #fff;
+    border: 1px solid var(--paper-line);
+    border-radius: 14px;
+    padding: 20px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(59, 31, 43, 0.3);
+    animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .photo-modal-box .photo {
+    width: 100%;
+    height: 320px;
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+
+  .photo-modal-box .photo-caption {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .photo-item:nth-child(odd) .photo { transform: rotate(-2deg); }
+  .photo-item:nth-child(even) .photo { transform: rotate(2deg); }
 
   @media (min-width: 980px) {
     .frame {
-      grid-template-columns: 160px 1fr 160px;
+      grid-template-columns: 240px 1fr 240px;
       grid-template-areas:
-        "p1   header header"
-        "p2   main   p6"
-        "p3   main   p7"
-        "p4   main   p8"
-        "p5   main   p9";
+        "p1   header p6"
+        "p2   main   p7"
+        "p3   main   p8"
+        "p4   main   p9"
+        "p5   main   p10";
       align-items: start;
-      gap: 24px;
+      column-gap: 48px;
+      row-gap: 22px;
     }
     header { grid-area: header; }
     main { grid-area: main; margin: 0; }
     .photos { display: contents; }
+    .photo-item {
+      width: 180px;
+    }
+    .photo-item:nth-child(odd) {
+      justify-self: start;
+    }
+    .photo-item:nth-child(even) {
+      justify-self: end;
+    }
     .photo {
       aspect-ratio: auto;
-      height: 140px;
+      height: 108px;
     }
-    .photo:nth-of-type(1) { grid-area: p1; }
-    .photo:nth-of-type(2) { grid-area: p2; }
-    .photo:nth-of-type(3) { grid-area: p3; }
-    .photo:nth-of-type(4) { grid-area: p4; }
-    .photo:nth-of-type(5) { grid-area: p5; }
-    .photo:nth-of-type(6) { grid-area: p6; }
-    .photo:nth-of-type(7) { grid-area: p7; }
-    .photo:nth-of-type(8) { grid-area: p8; }
-    .photo:nth-of-type(9) { grid-area: p9; }
+    .photo-item:nth-of-type(1) { grid-area: p1; }
+    .photo-item:nth-of-type(2) { grid-area: p2; }
+    .photo-item:nth-of-type(3) { grid-area: p3; }
+    .photo-item:nth-of-type(4) { grid-area: p4; }
+    .photo-item:nth-of-type(5) { grid-area: p5; }
+    .photo-item:nth-of-type(6) { grid-area: p6; }
+    .photo-item:nth-of-type(7) { grid-area: p7; }
+    .photo-item:nth-of-type(8) { grid-area: p8; }
+    .photo-item:nth-of-type(9) { grid-area: p9; }
+    .photo-item:nth-of-type(10) { grid-area: p10; }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -220,34 +282,252 @@
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(59, 31, 43, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 10;
+  }
+
+  .modal-box {
+    background: #fff;
+    border: 3px solid var(--rust);
+    border-radius: 18px;
+    padding: 40px 32px;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(59, 31, 43, 0.3);
+    animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .modal-box p {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 20px;
+    color: var(--rust);
+  }
+
+  .modal-close {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: var(--paper);
+    border: 1px solid var(--paper-line);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .cats-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 44px;
+  }
+
+  .cat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 84px;
+  }
+
+  .cat-item svg {
+    width: 78px;
+    height: 78px;
+  }
+
+  .cat-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
 </style>
 </head>
 <body>
 <div class="frame">
 
-  <div class="photo" data-label="[Bilde 1]"></div>
-  <div class="photo" data-label="[Bilde 2]"></div>
-  <div class="photo" data-label="[Bilde 3]"></div>
-  <div class="photo" data-label="[Bilde 4]"></div>
-  <div class="photo" data-label="[Bilde 5]"></div>
+  <div class="photo-item" data-caption="Pakk lett, kun håndbagasje tillatt">
+    <div class="photo" data-label="[Bilde 1]"></div>
+  </div>
+  <div class="photo-item" data-caption="Pakk en fin outfit til fredag!">
+    <div class="photo" data-label="[Bilde 2]"></div>
+  </div>
+  <div class="photo-item" data-caption="Pakk en fin outfit til lørdag og ;)">
+    <div class="photo" data-label="[Bilde 3]"></div>
+  </div>
+  <div class="photo-item" data-caption="Ta med deg hæler hvis du vil, men husk å lakke tærne.....">
+    <div class="photo" data-label="[Bilde 4]"></div>
+  </div>
+  <div class="photo-item" data-caption="[Bildetekst]">
+    <div class="photo" data-label="[Bilde 5]"></div>
+  </div>
 
   <header>
-    <h1 class="trip-name">BLÅTUR 2026</h1>
-    <div class="trip-dates">18.–20. september · fredag–søndag</div>
+    <h1 class="trip-name">KITTICATS BLÅTUR 2026</h1>
+    <div class="trip-dates">18.–20. september</div>
+    <p class="trip-hint">TRYKK PÅ BILDENE FOR VIKTIG INFO</p>
   </header>
 
   <main>
     <nav class="tabs" id="tabs"></nav>
     <section class="card" id="card"></section>
-    <footer>
-      Rediger stopp og bilde-tekster i <code>tripData</code> nederst i HTML-filen.
-    </footer>
+
+    <div class="cats-row">
+    <div class="cat-item">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#3B1F2B" stroke-width="3" stroke-linecap="round">
+        <path d="M20,35 L30,10 L40,32 Z" stroke-linejoin="round"/>
+        <path d="M80,35 L70,10 L60,32 Z" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="32"/>
+        <circle cx="38" cy="50" r="3.5" fill="#3B1F2B" stroke="none"/>
+        <circle cx="62" cy="50" r="3.5" fill="#3B1F2B" stroke="none"/>
+        <path d="M46,58 L54,58 L50,64 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M42,68 Q50,74 58,68"/>
+        <line x1="15" y1="58" x2="35" y2="55"/>
+        <line x1="15" y1="64" x2="35" y2="62"/>
+        <line x1="85" y1="58" x2="65" y2="55"/>
+        <line x1="85" y1="64" x2="65" y2="62"/>
+      </svg>
+      <span class="cat-name">ANDREA</span>
+    </div>
+
+    <div class="cat-item">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#3B1F2B" stroke-width="3" stroke-linecap="round">
+        <path d="M20,35 L30,10 L40,32 Z" stroke-linejoin="round"/>
+        <path d="M80,35 L70,10 L60,32 Z" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="32"/>
+        <path d="M38,47 C36.5,44 32,45 32,48 C32,51.5 38,55 38,55 C38,55 44,51.5 44,48 C44,45 39.5,44 38,47 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M62,47 C60.5,44 56,45 56,48 C56,51.5 62,55 62,55 C62,55 68,51.5 68,48 C68,45 63.5,44 62,47 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M46,58 L54,58 L50,64 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M40,70 Q50,76 60,70"/>
+        <line x1="15" y1="58" x2="35" y2="55"/>
+        <line x1="15" y1="64" x2="35" y2="62"/>
+        <line x1="85" y1="58" x2="65" y2="55"/>
+        <line x1="85" y1="64" x2="65" y2="62"/>
+      </svg>
+      <span class="cat-name">MARLIN</span>
+    </div>
+
+    <div class="cat-item">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#3B1F2B" stroke-width="3" stroke-linecap="round">
+        <path d="M20,35 L30,10 L40,32 Z" stroke-linejoin="round"/>
+        <path d="M80,35 L70,10 L60,32 Z" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="32"/>
+        <path d="M32,50 Q38,44 44,50"/>
+        <path d="M56,50 Q62,44 68,50"/>
+        <path d="M46,58 L54,58 L50,64 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M40,68 Q50,80 60,68 Q50,73 40,68 Z"/>
+        <line x1="15" y1="58" x2="35" y2="55"/>
+        <line x1="15" y1="64" x2="35" y2="62"/>
+        <line x1="85" y1="58" x2="65" y2="55"/>
+        <line x1="85" y1="64" x2="65" y2="62"/>
+      </svg>
+      <span class="cat-name">SYNNE</span>
+    </div>
+
+    <div class="cat-item">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#3B1F2B" stroke-width="3" stroke-linecap="round">
+        <path d="M20,35 L30,10 L40,32 Z" stroke-linejoin="round"/>
+        <path d="M80,35 L70,10 L60,32 Z" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="32"/>
+        <circle cx="38" cy="49" r="6"/>
+        <circle cx="38" cy="49" r="2" fill="#3B1F2B" stroke="none"/>
+        <circle cx="62" cy="49" r="6"/>
+        <circle cx="62" cy="49" r="2" fill="#3B1F2B" stroke="none"/>
+        <path d="M46,58 L54,58 L50,64 Z" fill="#3B1F2B" stroke="none"/>
+        <circle cx="50" cy="72" r="4"/>
+        <line x1="15" y1="58" x2="35" y2="55"/>
+        <line x1="15" y1="64" x2="35" y2="62"/>
+        <line x1="85" y1="58" x2="65" y2="55"/>
+        <line x1="85" y1="64" x2="65" y2="62"/>
+      </svg>
+      <span class="cat-name">IDA</span>
+    </div>
+
+    <div class="cat-item">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#3B1F2B" stroke-width="3" stroke-linecap="round">
+        <path d="M20,35 L30,10 L40,32 Z" stroke-linejoin="round"/>
+        <path d="M80,35 L70,10 L60,32 Z" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="32"/>
+        <line x1="32" y1="51" x2="44" y2="51"/>
+        <line x1="56" y1="51" x2="68" y2="51"/>
+        <path d="M46,58 L54,58 L50,64 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M43,69 Q50,73 57,69"/>
+        <line x1="15" y1="58" x2="35" y2="55"/>
+        <line x1="15" y1="64" x2="35" y2="62"/>
+        <line x1="85" y1="58" x2="65" y2="55"/>
+        <line x1="85" y1="64" x2="65" y2="62"/>
+      </svg>
+      <span class="cat-name">MINA</span>
+    </div>
+
+    <div class="cat-item">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#3B1F2B" stroke-width="3" stroke-linecap="round">
+        <path d="M20,35 L30,10 L40,32 Z" stroke-linejoin="round"/>
+        <path d="M80,35 L70,10 L60,32 Z" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="32"/>
+        <circle cx="38" cy="50" r="3.5" fill="#3B1F2B" stroke="none"/>
+        <circle cx="62" cy="50" r="3.5" fill="#3B1F2B" stroke="none"/>
+        <path d="M46,58 L54,58 L50,64 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M42,68 Q50,73 58,68"/>
+        <path d="M50,73 L48,82" stroke-width="4"/>
+        <line x1="15" y1="58" x2="35" y2="55"/>
+        <line x1="15" y1="64" x2="35" y2="62"/>
+        <line x1="85" y1="58" x2="65" y2="55"/>
+        <line x1="85" y1="64" x2="65" y2="62"/>
+      </svg>
+      <span class="cat-name">KRISTIN</span>
+    </div>
+
+    <div class="cat-item">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#3B1F2B" stroke-width="3" stroke-linecap="round">
+        <path d="M20,35 L30,10 L40,32 Z" stroke-linejoin="round"/>
+        <path d="M80,35 L70,10 L60,32 Z" stroke-linejoin="round"/>
+        <circle cx="50" cy="55" r="32"/>
+        <path d="M32,50 Q38,45 44,50"/>
+        <circle cx="62" cy="50" r="3.5" fill="#3B1F2B" stroke="none"/>
+        <path d="M46,58 L54,58 L50,64 Z" fill="#3B1F2B" stroke="none"/>
+        <path d="M42,69 Q50,75 58,69"/>
+        <line x1="15" y1="58" x2="35" y2="55"/>
+        <line x1="15" y1="64" x2="35" y2="62"/>
+        <line x1="85" y1="58" x2="65" y2="55"/>
+        <line x1="85" y1="64" x2="65" y2="62"/>
+      </svg>
+      <span class="cat-name">ANITA</span>
+    </div>
+  </div>
   </main>
 
-  <div class="photo" data-label="[Bilde 6]"></div>
-  <div class="photo" data-label="[Bilde 7]"></div>
-  <div class="photo" data-label="[Bilde 8]"></div>
-  <div class="photo" data-label="[Bilde 9]"></div>
+  <div class="photo-item" data-caption="Vi skal spise masse god mat">
+    <div class="photo" data-label="[Bilde 6]"></div>
+  </div>
+  <div class="photo-item" data-caption="Og drikke masse god øl">
+    <div class="photo" data-label="[Bilde 7]"></div>
+  </div>
+  <div class="photo-item" data-caption="City stroll & shopping">
+    <div class="photo" data-label="[Bilde 8]"></div>
+  </div>
+  <div class="photo-item" data-caption="Håper ingen havner i fengsel ?!?!">
+    <div class="photo" data-label="[Bilde 9]"></div>
+  </div>
+  <div class="photo-item" data-caption="[Bildetekst]">
+    <div class="photo" data-label="[Bilde 10]"></div>
+  </div>
 
 </div>
 
@@ -258,27 +538,19 @@
       label: "Fredag",
       date: "Fredag 18. september",
       stops: [
-        { time: "08:00", activity: "Avreise", place: "[Sted / adresse]" },
-        { time: "12:30", activity: "[Aktivitet]", place: "[Sted]" },
-        { time: "19:00", activity: "Middag", place: "[Sted]" },
+        { time: "14:15", activity: "OPPMØTE", place: "KASTRUP" },
+        { time: "14:45", activity: "OPPMØTE", place: "GARDERMOEN" },
       ],
     },
     {
       label: "Lørdag",
       date: "Lørdag 19. september",
-      stops: [
-        { time: "09:00", activity: "[Aktivitet]", place: "[Sted]" },
-        { time: "14:00", activity: "[Aktivitet]", place: "[Sted]" },
-        { time: "20:00", activity: "[Aktivitet]", place: "[Sted]" },
-      ],
+      secret: "HAHA! DU TRODDE AT DU SKULLE FÅ VITE NOE???",
     },
     {
       label: "Søndag",
       date: "Søndag 20. september",
-      stops: [
-        { time: "10:00", activity: "[Aktivitet]", place: "[Sted]" },
-        { time: "15:00", activity: "Hjemreise", place: "[Sted / adresse]" },
-      ],
+      secret: "DU ER EN LETTLURT KATTEPUS! DET ER HEMMELIIIIIIG",
     },
   ];
 
@@ -292,7 +564,12 @@
       const btn = document.createElement("button");
       btn.className = "tab" + (i === activeIndex ? " active" : "");
       btn.textContent = day.label;
-      btn.onclick = () => { activeIndex = i; renderTabs(); renderCard(); };
+      btn.onclick = () => {
+        activeIndex = i;
+        renderTabs();
+        renderCard();
+        if (day.secret) showSecretModal(day.secret);
+      };
       tabsEl.appendChild(btn);
     });
   }
@@ -314,7 +591,7 @@
     date.textContent = day.date;
     cardEl.appendChild(date);
 
-    day.stops.forEach(stop => {
+    (day.stops || []).forEach(stop => {
       const row = document.createElement("div");
       row.className = "stop";
 
@@ -338,6 +615,64 @@
       cardEl.appendChild(row);
     });
   }
+
+  function showSecretModal(message) {
+    const backdrop = document.createElement("div");
+    backdrop.className = "modal-backdrop";
+
+    const box = document.createElement("div");
+    box.className = "modal-box";
+
+    const text = document.createElement("p");
+    text.textContent = message;
+
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "modal-close";
+    closeBtn.textContent = "Skjønner";
+    closeBtn.onclick = () => backdrop.remove();
+
+    box.appendChild(text);
+    box.appendChild(closeBtn);
+    backdrop.appendChild(box);
+    backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+
+    document.body.appendChild(backdrop);
+  }
+
+  function showPhotoModal(label, caption) {
+    const backdrop = document.createElement("div");
+    backdrop.className = "modal-backdrop";
+
+    const box = document.createElement("div");
+    box.className = "photo-modal-box";
+
+    const photo = document.createElement("div");
+    photo.className = "photo";
+    photo.setAttribute("data-label", label);
+
+    const captionEl = document.createElement("p");
+    captionEl.className = "photo-caption";
+    captionEl.textContent = caption;
+
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "modal-close";
+    closeBtn.textContent = "Lukk";
+    closeBtn.onclick = () => backdrop.remove();
+
+    box.appendChild(photo);
+    box.appendChild(captionEl);
+    box.appendChild(closeBtn);
+    backdrop.appendChild(box);
+    backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+
+    document.body.appendChild(backdrop);
+  }
+
+  document.querySelectorAll(".photo-item").forEach(item => {
+    const label = item.querySelector(".photo").getAttribute("data-label");
+    const caption = item.getAttribute("data-caption");
+    item.addEventListener("click", () => showPhotoModal(label, caption));
+  });
 
   renderTabs();
   renderCard();
